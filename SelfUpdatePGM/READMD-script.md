@@ -40,3 +40,52 @@ C# Project요 .gitignore 파일 만들어죠
 ```
 
 # DeployServer WebUI 에서 배포상황 dashboard 만들어죠
+
+```
+cd DeployServer; dotnet run
+```
+
+# SUartPGM
+
+```
+SUartPGM 프로그램은 Windows OS booting과 동시에 실행이 되고
+SUartPGM 프로그램 비정상 종료시 다시 실행되도록 해죠
+
+구현 방향
+
+부팅 시 자동 실행
+
+Windows 작업 스케줄러: 로그온 시 실행되도록 작업 등록
+레지스트리: HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run에 실행 경로 등록
+시작 프로그램 폴더: %APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup에 바로가기 추가
+비정상 종료 시 재실행
+
+시스템 서비스: SUartPGM을 Windows 서비스로 구현하고 실패 시 자동 재시작 정책 설정
+별도 감시 프로그램(Wrapper): SUartPGM을 실행하고, 종료되면 감시 프로그램이 다시 실행
+작업 스케줄러: 1분마다 동작 여부를 확인하고, 종료됐으면 다시 실행하는 작업 등록
+이 중에서 어떤 방식으로 구현할지 정하면, 해당 방법 기준으로 구체적인 설정/코드 예시를 정리해 드리겠습니다.
+
+## SUartPGMWrapper (감시 프로그램)
+
+SUartPGM을 실행하고, 비정상/정상 종료 시 2초 후 자동 재시작합니다.
+
+### 사용법
+- **직접 실행**: `SUartPGMWrapper.exe` 실행 → SUartPGM 자동 실행 및 감시
+- **부팅 시 자동 실행**: 아래 중 하나로 `SUartPGMWrapper.exe` 등록
+  - 레지스트리: `HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run`
+  - 시작 프로그램: `%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup`에 바로가기 추가
+
+### 동작
+1. SUartPGM.exe를 같은 폴더에서 실행
+2. 종료 시 2초 대기 후 재시작 (크래시 루프 방지)
+3. SUartPGM.exe 없으면 `SUartPGMWrapper.log`에 기록 후 종료
+
+### 중지 방법
+SUartPGMWrapper.exe 프로세스를 종료하면 SUartPGM도 함께 종료되며 재시작되지 않습니다.
+
+
+부팅 시 자동 실행 예시 (PowerShell, 관리자 권한):
+$exePath = "C:\경로\SUartPGM\SUartPGMWrapper.exe"
+Set-ItemProperty -Path "HKCU:\Software\Microsoft\Windows\CurrentVersion\Run" -Name "SUartPGM" -Value $exePath
+
+```

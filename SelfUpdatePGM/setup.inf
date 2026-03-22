@@ -1,6 +1,6 @@
 ;*** BEGIN **********************************************************
 ;**                                                                **
-;** Automatically generated on: Sun Mar 22 12:20:53 2026           **
+;** Automatically generated on: Sun Mar 22 12:59:03 2026           **
 ;**                                                                **
 ;** MakeCAB Version: 5.00                                 **
 ;**                                                                **
@@ -15,6 +15,10 @@
 1,1,SUartPGM.exe,151552
 1,1,SUartPGM.pdb,17684
 1,1,SUartPGM.runtimeconfig.json,429
+1,1,SUartPGMWrapper.dll,5632
+1,1,SUartPGMWrapper.exe,151552
+1,1,SUartPGMWrapper.pdb,11748
+1,1,SUartPGMWrapper.runtimeconfig.json,340
 1,1,System.IO.Ports.dll,88328
 1,1,update.config.json,52
 1,1,UpdateHelper.dll,6144
@@ -23,6 +27,6 @@
 1,1,UpdateHelper.runtimeconfig.json,340
 ;*** END ************************************************************
 ;**                                                                **
-;** Automatically generated on: Sun Mar 22 12:20:53 2026           **
+;** Automatically generated on: Sun Mar 22 12:59:03 2026           **
 ;**                                                                **
 ;*** END ************************************************************

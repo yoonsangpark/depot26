@@ -16,11 +16,22 @@ Push-Location $ProjectRoot\UpdateHelper
 dotnet publish -c Release -r win-x64 --self-contained false -o "$ProjectRoot\publish\UpdateHelper"
 Pop-Location
 
-# 3. Copy UpdateHelper.exe to SUartPGM publish folder
+# 2b. publish SUartPGMWrapper
+Write-Host "Publishing SUartPGMWrapper..." -ForegroundColor Cyan
+Push-Location $ProjectRoot\SUartPGMWrapper
+dotnet publish -c Release -r win-x64 --self-contained false -o "$ProjectRoot\publish\SUartPGMWrapper"
+Pop-Location
+
+# 3. Copy UpdateHelper.exe and SUartPGMWrapper.exe to SUartPGM publish folder
 Copy-Item "$ProjectRoot\publish\UpdateHelper\UpdateHelper.exe" "$ProjectRoot\publish\SUartPGM\" -Force
 Copy-Item "$ProjectRoot\publish\UpdateHelper\UpdateHelper.dll" "$ProjectRoot\publish\SUartPGM\" -Force
 Copy-Item "$ProjectRoot\publish\UpdateHelper\UpdateHelper.pdb" "$ProjectRoot\publish\SUartPGM\" -ErrorAction SilentlyContinue
 Copy-Item "$ProjectRoot\publish\UpdateHelper\UpdateHelper.runtimeconfig.json" "$ProjectRoot\publish\SUartPGM\" -ErrorAction SilentlyContinue
+
+Copy-Item "$ProjectRoot\publish\SUartPGMWrapper\SUartPGMWrapper.exe" "$ProjectRoot\publish\SUartPGM\" -Force
+Copy-Item "$ProjectRoot\publish\SUartPGMWrapper\SUartPGMWrapper.dll" "$ProjectRoot\publish\SUartPGM\" -Force
+Copy-Item "$ProjectRoot\publish\SUartPGMWrapper\SUartPGMWrapper.pdb" "$ProjectRoot\publish\SUartPGM\" -ErrorAction SilentlyContinue
+Copy-Item "$ProjectRoot\publish\SUartPGMWrapper\SUartPGMWrapper.runtimeconfig.json" "$ProjectRoot\publish\SUartPGM\" -ErrorAction SilentlyContinue
 
 # 4. Get version from SUartPGM
 $Version = (Get-Item "$ProjectRoot\publish\SUartPGM\SUartPGM.dll").VersionInfo.FileVersion
