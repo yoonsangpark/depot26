@@ -11,6 +11,11 @@ x86/
 bld/
 [Bb]in/
 [Oo]bj/
+publish/
+
+# DeployServer releases (build output) - un-ignore so folder exists
+!DeployServer/releases/
+!DeployServer/releases/*
 [Ll]og/
 [Ll]ogs/
 

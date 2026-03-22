@@ -1,0 +1,28 @@
+;*** BEGIN **********************************************************
+;**                                                                **
+;** Automatically generated on: Sun Mar 22 10:13:58 2026           **
+;**                                                                **
+;** MakeCAB Version: 5.00                                 **
+;**                                                                **
+;*** BEGIN **********************************************************
+[disk list]
+1,Disk 1
+[cabinet list]
+1,1,SUartPGM.cab
+[file list]
+1,1,SUartPGM.deps.json,1096
+1,1,SUartPGM.dll,21504
+1,1,SUartPGM.exe,151552
+1,1,SUartPGM.pdb,17684
+1,1,SUartPGM.runtimeconfig.json,429
+1,1,System.IO.Ports.dll,88328
+1,1,update.config.json,52
+1,1,UpdateHelper.dll,6144
+1,1,UpdateHelper.exe,151552
+1,1,UpdateHelper.pdb,11928
+1,1,UpdateHelper.runtimeconfig.json,340
+;*** END ************************************************************
+;**                                                                **
+;** Automatically generated on: Sun Mar 22 10:13:58 2026           **
+;**                                                                **
+;*** END ************************************************************
