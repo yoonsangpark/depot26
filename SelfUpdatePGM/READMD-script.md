@@ -1,4 +1,64 @@
 
+# Architecture Diagram
+
+```mermaid
+flowchart TB
+    subgraph Client["클라이언트 PC"]
+        Boot[Windows 부팅]
+        Run[레지스트리 Run / 시작프로그램]
+        Wrapper[SUartPGMWrapper.exe]
+        SUart[SUartPGM.exe]
+        UpdateCheck[UpdateChecker]
+        UI[Form1 / UART UI]
+        Helper[UpdateHelper.exe]
+    end
+
+    subgraph Server["배포 서버"]
+        Deploy[DeployServer]
+        Version[version.json]
+        Cab[SUartPGM.cab]
+    end
+
+    Boot --> Run
+    Run --> Wrapper
+    Wrapper -->|실행·감시| SUart
+    SUart --> UpdateCheck
+    SUart --> UI
+    UpdateCheck -->|HTTP| Deploy
+    Deploy --> Version
+    Deploy --> Cab
+    UpdateCheck -->|업데이트 시| Helper
+    Helper -->|파일 교체 후| SUart
+
+    Wrapper -.->|종료 시 2초 후 재시작| SUart
+```
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Wrapper as SUartPGMWrapper
+    participant SUart as SUartPGM
+    participant Server as DeployServer
+    participant Helper as UpdateHelper
+
+    User->>Wrapper: 실행 (또는 부팅 시 자동)
+    Wrapper->>SUart: StartProcess
+    SUart->>Server: version.json 요청
+    alt 최신 버전 있음
+        Server-->>SUart: 버전 정보
+        SUart->>Helper: UpdateHelper 실행 (--wait-pid)
+        SUart->>SUart: 종료
+        Helper->>Helper: 메인 앱 종료 대기
+        Helper->>Helper: CAB 압축 해제 → 파일 복사
+        Helper->>SUart: 재시작
+    else 최신 버전 없음
+        SUart->>User: Form1 UI 표시
+    end
+    SUart->>SUart: 종료 (정상/비정상)
+    Wrapper->>Wrapper: 2초 대기
+    Wrapper->>SUart: 재시작
+```
+
 # Overview
 ```
 Windows FromView 를 이용한 C# 프로젝트트 만들어죠
