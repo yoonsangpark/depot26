@@ -32,8 +32,11 @@ C# Project요 .gitignore 파일 만들어죠
 ```
 
 ## 배포 및 업데이트 사용법
-
+```
 1. **빌드 & CAB 패키징**: `.\build.ps1` 실행
 2. **배포 서버 실행**: `cd DeployServer; dotnet run` (기본 http://localhost:5000)
 3. **클라이언트 설정**: `update.config.json`에 `updateServerUrl` 설정 (예: `http://서버IP:5000`)
 4. **자동 업데이트**: SUartPGM 실행 시 서버에서 최신 버전 확인 후 업데이트
+```
+
+# DeployServer WebUI 에서 배포상황 dashboard 만들어죠
