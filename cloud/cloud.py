@@ -9,7 +9,7 @@ class Cloud:
     def draw(self,screen,alt,atm,rect):
 
         cx=rect.x+rect.w*self.x_ratio
-        cy=rect.y+rect.h*0.6
+        cy=rect.y+rect.h*0.8
 
         y=cy-alt*35
 

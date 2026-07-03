@@ -9,7 +9,7 @@ W,H=1200,700
 screen=pygame.display.set_mode((W,H))
 pygame.display.set_caption("Cloud Simulator")
 
-font=pygame.font.SysFont("malgungothic",20)
+font=pygame.font.SysFont("malgungothic",15)
 
 atm=Atmosphere()
 atm.calc()
