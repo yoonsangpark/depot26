@@ -17,7 +17,7 @@ atm.calc()
 cloud=Cloud()
 skewt=SkewT()
 
-sliderX=100
+sliderX=50
 sliderY=650
 sliderW=300
 sliderValue=0
@@ -81,7 +81,7 @@ while running:
         screen.blit(font.render(text,True,(0,0,0)),(infoPad+15,infoPad+20+idx*25))
 
     # ================= LEFT BOTTOM (Skew-T) =================
-    skewtRect=pygame.Rect(infoPad,infoH,leftW-infoPad*2,H-infoH-infoPad)
+    skewtRect=pygame.Rect(infoPad,infoH+10,leftW-infoPad*2,H-infoH-infoPad)
     pygame.draw.rect(screen,(245,245,245),skewtRect,border_radius=infoRadius)
     pygame.draw.rect(screen,(180,180,180),skewtRect,2,border_radius=infoRadius)
     skewt.draw(screen,atm,alt,skewtRect,infoRadius)
@@ -93,7 +93,11 @@ while running:
     cloud.draw(screen,alt,atm,cloudRect)
 
     # ================= SLIDER =================
-    pygame.draw.line(screen,(0,0,0),(sliderX,sliderY),(sliderX+sliderW,sliderY),5)
+    #Y 
+    pygame.draw.line(screen,(0,0,0),(sliderX,sliderY),(sliderX,sliderY-400), 2)
+
+    #X
+    pygame.draw.line(screen,(0,0,0),(sliderX,sliderY),(sliderX+sliderW,sliderY),2)
 
     knob=sliderX+sliderValue*sliderW
     pygame.draw.circle(screen,(255,0,0),(int(knob),sliderY),12)
