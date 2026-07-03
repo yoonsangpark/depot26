@@ -1,0 +1,95 @@
+import pygame
+from atmosphere import Atmosphere
+from cloud import Cloud
+from skewt import SkewT
+
+pygame.init()
+
+W,H=1200,700
+screen=pygame.display.set_mode((W,H))
+pygame.display.set_caption("Cloud Simulator")
+
+font=pygame.font.SysFont("malgungothic",20)
+
+atm=Atmosphere()
+atm.calc()
+
+cloud=Cloud()
+skewt=SkewT()
+
+sliderX=100
+sliderY=650
+sliderW=300
+sliderValue=0
+
+clock=pygame.time.Clock()
+
+running=True
+
+while running:
+
+    clock.tick(60)
+    screen.fill((180,220,255))
+
+    for event in pygame.event.get():
+
+        if event.type==pygame.QUIT:
+            running=False
+
+        if event.type==pygame.MOUSEBUTTONDOWN:
+            mx,my=pygame.mouse.get_pos()
+            if sliderX<=mx<=sliderX+sliderW:
+                sliderValue=(mx-sliderX)/sliderW
+
+        if event.type==pygame.MOUSEMOTION:
+            if pygame.mouse.get_pressed()[0]:
+                mx,my=pygame.mouse.get_pos()
+                if sliderX<=mx<=sliderX+sliderW:
+                    sliderValue=(mx-sliderX)/sliderW
+
+    sliderValue=max(0,min(sliderValue,1))
+
+    alt=sliderValue*atm.maxAlt
+    i=int(sliderValue*(len(atm.alt)-1))
+
+    T=atm.airTemp[i]
+    DP=atm.dp[i]
+
+    state="건조단열" if T>DP else "습윤단열"
+
+    # ================= LEFT (Skew-T) =================
+    left=pygame.Rect(0,0,W//3,H)
+    pygame.draw.rect(screen,(245,245,245),left)
+    skewt.draw(screen,atm,alt,left)
+
+    # ================= CENTER (CLOUD) =================
+    center=pygame.Rect(W//3,0,W//3,H)
+    pygame.draw.rect(screen,(200,220,255),center)
+    cloud.draw(screen,alt,atm,center)
+
+    # ================= RIGHT (INFO) =================
+    right=pygame.Rect(W//3*2,0,W//3-60,H)
+    pygame.draw.rect(screen,(235,235,235),right)
+
+    info=[
+        f"고도:{round(alt,2)} km",
+        f"공기:{T}°C",
+        f"이슬점:{DP}°C",
+        f"상태:{state}",
+        f"LCL:{atm.LCL}",
+        f"LFC:{atm.LFC}",
+        f"EL:{atm.EL}"
+    ]
+
+    for idx,text in enumerate(info):
+        screen.blit(font.render(text,True,(0,0,0)),(W//3*2+15,80+idx*25))
+
+    # ================= SLIDER =================
+    pygame.draw.line(screen,(0,0,0),(sliderX,sliderY),(sliderX+sliderW,sliderY),5)
+
+    knob=sliderX+sliderValue*sliderW
+    pygame.draw.circle(screen,(255,0,0),(int(knob),sliderY),12)
+
+    pygame.display.update()
+
+pygame.quit()
