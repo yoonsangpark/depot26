@@ -63,13 +63,13 @@ while running:
     infoRadius=16
 
     info=[
-        f"고도:{round(alt,2)} km",
-        f"공기:{T}°C",
-        f"이슬점:{DP}°C",
-        f"상태:{state}",
-        f"LCL:{atm.LCL}",
-        f"LFC:{atm.LFC}",
-        f"EL:{atm.EL}"
+        f"고도 : {round(alt,2)} km",
+        f"공기 : {T}°C",
+        f"이슬점 : {DP}°C",
+        f"상태 : {state}",
+        f"LCL : {atm.LCL}",
+        f"LFC  {atm.LFC}",
+        f"EL : {atm.EL}"
     ]
 
     # ================= LEFT TOP (INFO) =================
