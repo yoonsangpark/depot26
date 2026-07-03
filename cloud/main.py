@@ -57,7 +57,7 @@ while running:
 
     state="건조단열" if T>DP else "습윤단열"
 
-    infoH=200
+    infoH=230
     leftW=W//3
     infoPad=12
     infoRadius=16
