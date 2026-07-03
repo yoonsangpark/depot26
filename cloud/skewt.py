@@ -5,28 +5,58 @@ class SkewT:
     def __init__(self):
         self.skew=18
 
-    def draw(self,screen,atm,alt,rect):
+    def draw(self,screen,atm,alt,rect,borderRadius=16):
 
-        x0=rect.x+20
-        y0=rect.y+20
-        w=rect.w-40
-        h=rect.h-40
+        margin=borderRadius+22
+        plot=pygame.Rect(margin,margin,rect.w-margin*2,rect.h-margin*2)
+        if plot.w<1 or plot.h<1:
+            return
 
-        pygame.draw.rect(screen,(255,255,255),rect)
+        def raw_x(temp,altKm):
+            return temp*2+self.skew*altKm*8
+
+        xs=[raw_x(atm.envTemp[i],atm.alt[i]) for i in range(len(atm.alt))]
+        xs+=[raw_x(atm.airTemp[i],atm.alt[i]) for i in range(len(atm.alt))]
+        xMin,xMax=min(xs),max(xs)
+        xSpan=xMax-xMin or 1
+
+        def mapX(temp,altKm):
+            return (raw_x(temp,altKm)-xMin)/xSpan*plot.w
+
+        def mapY(altKm):
+            return plot.h-(altKm/atm.maxAlt)*plot.h
+
+        plotSurf=pygame.Surface((plot.w,plot.h),pygame.SRCALPHA)
+        plotSurf.fill((0,0,0,0))
 
         for i in range(len(atm.alt)-1):
+            pygame.draw.line(
+                plotSurf,(0,0,255),
+                (mapX(atm.envTemp[i],atm.alt[i]),mapY(atm.alt[i])),
+                (mapX(atm.envTemp[i+1],atm.alt[i+1]),mapY(atm.alt[i+1])),1
+            )
 
-            x1=x0+atm.envTemp[i]*2 + self.skew*atm.alt[i]*8
-            y1=y0+h-(atm.alt[i]/atm.maxAlt)*h
+        iMax=int((alt/atm.maxAlt)*(len(atm.alt)-1))
+        for i in range(iMax):
+            pygame.draw.line(
+                plotSurf,(0,0,0),
+                (mapX(atm.airTemp[i],atm.alt[i]),mapY(atm.alt[i])),
+                (mapX(atm.airTemp[i+1],atm.alt[i+1]),mapY(atm.alt[i+1])),1
+            )
 
-            x2=x0+atm.envTemp[i+1]*2 + self.skew*atm.alt[i+1]*8
-            y2=y0+h-(atm.alt[i+1]/atm.maxAlt)*h
+        mx=mapX(atm.airTemp[iMax],atm.alt[iMax])
+        my=mapY(atm.alt[iMax])
+        r=5
+        if r<=mx<=plot.w-r and r<=my<=plot.h-r:
+            pygame.draw.circle(plotSurf,(0,0,0),(int(mx),int(my)),r)
 
-            pygame.draw.line(screen,(0,0,255),(x1,y1),(x2,y2),1)
+        content=pygame.Surface((rect.w,rect.h),pygame.SRCALPHA)
+        content.fill((0,0,0,0))
+        content.blit(plotSurf,plot.topleft)
 
-        i=int((alt/atm.maxAlt)*(len(atm.alt)-1))
+        shape=pygame.Surface((rect.w,rect.h),pygame.SRCALPHA)
+        shape.fill((0,0,0,0))
+        pygame.draw.rect(shape,(255,255,255,255),shape.get_rect(),border_radius=borderRadius)
+        shape.blit(content,(0,0),special_flags=pygame.BLEND_RGBA_MULT)
 
-        x=x0+atm.airTemp[i]*2 + self.skew*atm.alt[i]*8
-        y=y0+h-(atm.alt[i]/atm.maxAlt)*h
-
-        pygame.draw.circle(screen,(0,0,0),(int(x),int(y)),5)
+        screen.blit(shape,rect.topleft)

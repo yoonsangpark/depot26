@@ -57,19 +57,10 @@ while running:
 
     state="건조단열" if T>DP else "습윤단열"
 
-    # ================= LEFT (Skew-T) =================
-    left=pygame.Rect(0,0,W//3,H)
-    pygame.draw.rect(screen,(245,245,245),left)
-    skewt.draw(screen,atm,alt,left)
-
-    # ================= CENTER (CLOUD) =================
-    center=pygame.Rect(W//3,0,W//3,H)
-    pygame.draw.rect(screen,(200,220,255),center)
-    cloud.draw(screen,alt,atm,center)
-
-    # ================= RIGHT (INFO) =================
-    right=pygame.Rect(W//3*2,0,W//3-60,H)
-    pygame.draw.rect(screen,(235,235,235),right)
+    infoH=200
+    leftW=W//3
+    infoPad=12
+    infoRadius=16
 
     info=[
         f"고도:{round(alt,2)} km",
@@ -81,8 +72,25 @@ while running:
         f"EL:{atm.EL}"
     ]
 
+    # ================= LEFT TOP (INFO) =================
+    infoRect=pygame.Rect(infoPad,infoPad,leftW-infoPad*2,infoH-infoPad)
+    pygame.draw.rect(screen,(235,235,235),infoRect,border_radius=infoRadius)
+    pygame.draw.rect(screen,(180,180,180),infoRect,2,border_radius=infoRadius)
+
     for idx,text in enumerate(info):
-        screen.blit(font.render(text,True,(0,0,0)),(W//3*2+15,80+idx*25))
+        screen.blit(font.render(text,True,(0,0,0)),(infoPad+15,infoPad+20+idx*25))
+
+    # ================= LEFT BOTTOM (Skew-T) =================
+    skewtRect=pygame.Rect(infoPad,infoH,leftW-infoPad*2,H-infoH-infoPad)
+    pygame.draw.rect(screen,(245,245,245),skewtRect,border_radius=infoRadius)
+    pygame.draw.rect(screen,(180,180,180),skewtRect,2,border_radius=infoRadius)
+    skewt.draw(screen,atm,alt,skewtRect,infoRadius)
+
+    # ================= RIGHT (CLOUD) =================
+    cloudRect=pygame.Rect(leftW+infoPad,infoPad,W-leftW-infoPad*2,H-infoPad*2)
+    pygame.draw.rect(screen,(200,220,255),cloudRect,border_radius=infoRadius)
+    pygame.draw.rect(screen,(180,180,180),cloudRect,2,border_radius=infoRadius)
+    cloud.draw(screen,alt,atm,cloudRect)
 
     # ================= SLIDER =================
     pygame.draw.line(screen,(0,0,0),(sliderX,sliderY),(sliderX+sliderW,sliderY),5)
